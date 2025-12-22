@@ -1,0 +1,7 @@
+[workspace]
+resolver = "2"
+
+members = [
+    "client",
+    "prototypes/*"  # Any folder inside prototypes will be part of the workspace
+]

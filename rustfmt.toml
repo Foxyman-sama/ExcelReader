@@ -1,0 +1,10 @@
+# This file configures the Rust code formatter, `rustfmt`.
+
+# Set the maximum line length
+max_width = 80
+
+# Use 2 spaces for indentation
+tab_spaces = 2
+
+# Use spaces instead of tabs
+use_tabs = "Never"
