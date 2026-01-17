@@ -3,5 +3,10 @@ resolver = "2"
 
 members = [
     "client",
-    "prototypes/*"  # Any folder inside prototypes will be part of the workspace
+    "prototypes/*"
 ]
+
+[workspace.dependencies]
+eframe = "0.29.1" 
+env_logger = "0.11.5"
+log = "0.4"
