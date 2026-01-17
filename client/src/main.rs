@@ -64,8 +64,6 @@ impl eframe::App for ExcelReader {
     });
 
     egui::CentralPanel::default().show(ctx, |ui| {
-      ui.heading("ExcelReader");
-
       if self.data.is_empty() {
         return;
       }
@@ -74,7 +72,10 @@ impl eframe::App for ExcelReader {
         .striped(true)
         .resizable(true)
         .cell_layout(egui::Layout::left_to_right(egui::Align::Center))
-        .columns(Column::initial(100.0).resizable(true), self.data.len())
+        .columns(
+          Column::initial(100.0).resizable(true).clip(true),
+          self.data[0].len(),
+        )
         .header(20.0, |mut header| {
           let headers = &self.data[0];
           for col in headers {
@@ -84,7 +85,7 @@ impl eframe::App for ExcelReader {
           }
         })
         .body(|body| {
-          let row_height = 10.0;
+          let row_height = 15.0;
           let num_rows = self.data.len() - 1;
           body.rows(row_height, num_rows, |mut row| {
             let row_index = row.index();
