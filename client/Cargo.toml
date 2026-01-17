@@ -1,6 +1,13 @@
 [package]
-name = "client"
-version = "0.1.0"
+name = "ExcelReader"
+version = "0.0.1"
 edition = "2024"
 
 [dependencies]
+calamine = { version = "0.32.0", features = ["chrono"] }
+eframe = { workspace = true, features = [
+  "default",
+  "__screenshot", # __screenshot is so we can dump a screenshot using EFRAME_SCREENSHOT_TO
+] }
+env_logger = { workspace = true, features = ["auto-color", "humantime"] }
+egui_extras = "0.29.1"
