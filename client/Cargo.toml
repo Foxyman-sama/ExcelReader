@@ -11,3 +11,4 @@ eframe = { workspace = true, features = [
 ] }
 env_logger = { workspace = true, features = ["auto-color", "humantime"] }
 egui_extras = "0.29.1"
+rfd = "0.15"

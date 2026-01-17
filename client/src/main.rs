@@ -3,6 +3,7 @@
 use calamine::{Reader, Xlsx, open_workbook};
 use eframe::egui;
 use egui_extras::{Column, TableBuilder};
+use std::path::PathBuf;
 
 fn main() -> eframe::Result {
   let options = eframe::NativeOptions {
@@ -21,28 +22,53 @@ struct ExcelReader {
   data: Vec<Vec<String>>,
 }
 
-impl Default for ExcelReader {
-  fn default() -> Self {
-    let mut data = Vec::new();
-    let path = format!("{}\\tests\\test.xlsx", env!("CARGO_MANIFEST_DIR"));
-    let mut excel: Xlsx<_> = open_workbook(path).unwrap();
-    if let Some(Ok(r)) = excel.worksheet_range_at(0) {
-      for row in r.rows() {
+impl ExcelReader {
+  fn read_excel(&mut self, path: &PathBuf) {
+    self.data.clear();
+
+    let mut excel: Xlsx<_> = open_workbook(path).expect("Couldn't open excel!");
+    if let Some(Ok(worksheet)) = excel.worksheet_range_at(0) {
+      for row in worksheet.rows() {
         let row_strings: Vec<String> =
           row.iter().map(|cell| cell.to_string()).collect();
-
-        data.push(row_strings);
+        self.data.push(row_strings);
       }
     }
+  }
+}
 
-    Self { data }
+impl Default for ExcelReader {
+  fn default() -> Self {
+    Self { data: Vec::new() }
   }
 }
 
 impl eframe::App for ExcelReader {
   fn update(&mut self, ctx: &eframe::egui::Context, frame: &mut eframe::Frame) {
+    egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
+      egui::menu::bar(ui, |ui| {
+        ui.menu_button("File", |ui| {
+          if ui.button("Open").clicked() {
+            let file = rfd::FileDialog::new()
+              .add_filter("Excel", &["xlsx", "xls"])
+              .set_directory("/")
+              .pick_file();
+            if let Some(path) = file {
+              self.read_excel(&path);
+            }
+
+            ui.close_menu();
+          }
+        })
+      });
+    });
+
     egui::CentralPanel::default().show(ctx, |ui| {
       ui.heading("ExcelReader");
+
+      if self.data.is_empty() {
+        return;
+      }
 
       TableBuilder::new(ui)
         .striped(true)
